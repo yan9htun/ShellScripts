@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Delete legacy installer directories from INSTALL folders under /opt/Path,
+# except versions 5.5.15*, 5.5.16*, 5.5.17*, and 5.5.18*.
+# The script prompts before deleting each directory for safety.
+
+for dir in /opt/Path/*/INSTALL; do
+  echo "Checking $dir"
+  find "$dir" -maxdepth 1 -type d -name '5.5.*' \
+    ! -name '5.5.15*' ! -name '5.5.16*' ! -name '5.5.17*' ! -name '5.5.18*' | while read -r folder; do
+      echo -n "Do you want to delete $folder? [y/N]: "
+      read -r answer
+      case "$answer" in
+        [yY][eE][sS]|[yY])
+          rm -rv "$folder"
+          ;;
+        *)
+          echo "Skipped $folder"
+          ;;
+      esac
+  done
+done
